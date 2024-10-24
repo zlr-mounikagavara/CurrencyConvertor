@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: currency-convertor-deployment
+  labels:
+    app: currency-convertor
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: currency-convertor
+  template:
+    metadata:
+      labels:
+        app: currency-convertor
+    spec:
+      containers:
+      - name: currency-convertor
+        image: your-container-image:latest
+        ports:
+        - containerPort: 80  # Change if your application uses a different port
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "500m"
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: currency-convertor-service
+spec:
+  selector:
+    app: currency-convertor
+  ports:
+    - protocol: TCP
+      port: 80    # Port exposed by the service
+      targetPort: 80  # Port in the container that the service maps to
+  type: LoadBalancer  # Change to NodePort if needed
